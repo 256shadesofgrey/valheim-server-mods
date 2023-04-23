@@ -86,7 +86,7 @@ START_INDEX=0
 # Check if BepInEx is present.
 # If so, move bepinex to the mod install folder.
 # This has to be done separately, because the paths are different from the other mods.
-if [ "${MOD_PAGE_LINKS[0]}"="/package/denikson/BepInExPack_Valheim/" ]; then
+if [ "${MOD_PAGE_LINKS[0]}" = "/package/denikson/BepInExPack_Valheim/" ]; then
     echo "Moving BepInEx from "$TEMP_EXTRACTION_PATH${MOD_NAMES[0]}"/"${MOD_NAMES[0]}"/ to "$INSTAL_PATH
     rsync -r --mkpath "$(eval echo $TEMP_EXTRACTION_PATH${MOD_NAMES[0]}/${MOD_NAMES[0]}/)"* "$(eval echo $INSTAL_PATH)"
     START_INDEX=1
