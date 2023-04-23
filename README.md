@@ -84,5 +84,5 @@ You should now be able to start the game and log in to your modded server.
 ## Configure service
 TODO: I haven't figured out this part yet.
 
-# Known problems
-- The server often crashes when trying to start it. I don't know any fix for it. Maybe use a different emulator in future?
+# Known issues
+- Sometimes the downloads do not work, and the script will try to re-download the mods multiple times. If this is the case, the script may end up running for a very long time (up to about 6-7 minutes per mod). If a download fails on the final retry, the mod will be skipped. Note: if the BepInEx download fails, none of the other mods will work.
