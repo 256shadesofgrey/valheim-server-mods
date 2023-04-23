@@ -77,12 +77,21 @@ do
     7z -y x "$(eval echo ${DOWNLOAD_PATH}${i}.${FILE_EXTENSION})" -o"$(eval echo $TEMP_EXTRACTION_PATH/${MOD_NAMES[$i]}/)"
 done
 
-# Move bepinex to the mod instal folder.
+# Indicates where the normal mods start.
+# Will be increased to 1 if BepInEx is to be installed.
+START_INDEX=0
+
+# Check if BepInEx is present.
+# If so, move bepinex to the mod install folder.
 # This has to be done separately, because the paths are different from the other mods.
-rsync -r "$(eval echo $TEMP_EXTRACTION_PATH${MOD_NAMES[0]}/${MOD_NAMES[0]}/)"* "$(eval echo $INSTAL_PATH)"
+if [${MOD_PAGE_LINKS[0]} -eq "/package/denikson/BepInExPack_Valheim/"]; then
+    echo "BepInEx to be installed. Starting with it."
+    rsync -r "$(eval echo $TEMP_EXTRACTION_PATH${MOD_NAMES[0]}/${MOD_NAMES[0]}/)"* "$(eval echo $INSTAL_PATH)"
+    START_INDEX=1
+fi
 
 # Move the rest of the mods to the bepinex folder.
-for ((i=1; i<=$LAST_INDEX; ++i))
+for ((i=$START_INDEX; i<=$LAST_INDEX; ++i))
 do
     cd $TEMP_EXTRACTION_PATH/${MOD_NAMES[$i]}/
     FILES_TO_MOVE=$(ls $TEMP_EXTRACTION_PATH/${MOD_NAMES[$i]}/ -I icon.png -I manifest.json -I README.md)
