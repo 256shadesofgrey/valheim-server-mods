@@ -58,6 +58,8 @@ do
 
     # Combine the download link with the SITE_LINK to get the full link that we can use.
     MOD_DOWNLOAD_LINKS[$i]=$SITE_LINK${MOD_DOWNLOAD_LINKS[$i]}
+
+    echo "Acquired download link: " ${MOD_DOWNLOAD_LINKS[$i]}
 done
 
 # Download the mods to the download folder, name them $i.$FILE_EXTENSION (i.e. 0.zip, 1.zip...)
