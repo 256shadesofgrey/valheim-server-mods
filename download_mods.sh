@@ -67,7 +67,7 @@ mkdir -p "$(eval echo $DOWNLOAD_PATH)"
 for ((i=0; i<=$LAST_INDEX; ++i))
 do
     #wget ${MOD_DOWNLOAD_LINKS[$i]} -O "$(eval echo ${DOWNLOAD_PATH}${i}.${FILE_EXTENSION})"
-    curl --retry 2 -o "$(eval echo ${DOWNLOAD_PATH}${i}.${FILE_EXTENSION})" -L ${MOD_DOWNLOAD_LINKS[$i]}
+    curl --connect-timeout 20 --max-time 20 --retry-delay 30 --retry 10 -o "$(eval echo ${DOWNLOAD_PATH}${i}.${FILE_EXTENSION})" -L ${MOD_DOWNLOAD_LINKS[$i]}
 done
 
 # Extract files to the temp folder.
