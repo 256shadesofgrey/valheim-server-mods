@@ -52,10 +52,10 @@ done
 for ((i=0; i<=$LAST_INDEX; ++i))
 do
     FULL_MOD_PAGE_LINK=$SITE_LINK${MOD_PAGE_LINKS[$i]}
-    
+
     # This downloads the page and searches it for the download link.
     MOD_DOWNLOAD_LINKS[$i]=$(wget -q ${FULL_MOD_PAGE_LINK} -O - | grep -m1 -iohE ${MOD_DOWNLOAD_LINKS[$i]})
-    
+
     # Combine the download link with the SITE_LINK to get the full link that we can use.
     MOD_DOWNLOAD_LINKS[$i]=$SITE_LINK${MOD_DOWNLOAD_LINKS[$i]}
 done
@@ -64,7 +64,8 @@ done
 mkdir -p "$(eval echo $DOWNLOAD_PATH)"
 for ((i=0; i<=$LAST_INDEX; ++i))
 do
-    wget ${MOD_DOWNLOAD_LINKS[$i]} -O "$(eval echo ${DOWNLOAD_PATH}${i}.${FILE_EXTENSION})"
+    #wget ${MOD_DOWNLOAD_LINKS[$i]} -O "$(eval echo ${DOWNLOAD_PATH}${i}.${FILE_EXTENSION})"
+    curl -o "$(eval echo ${DOWNLOAD_PATH}${i}.${FILE_EXTENSION})" -L ${MOD_DOWNLOAD_LINKS[$i]}
 done
 
 # Extract files to the temp folder.
