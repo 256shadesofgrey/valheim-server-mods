@@ -59,13 +59,14 @@ do
     # Combine the download link with the SITE_LINK to get the full link that we can use.
     MOD_DOWNLOAD_LINKS[$i]=$SITE_LINK${MOD_DOWNLOAD_LINKS[$i]}
 
-    echo "Acquired download link: " ${MOD_DOWNLOAD_LINKS[$i]}
+    echo "Acquired download link: "${MOD_DOWNLOAD_LINKS[$i]}
 done
 
 # Download the mods to the download folder, name them $i.$FILE_EXTENSION (i.e. 0.zip, 1.zip...)
 mkdir -p "$(eval echo $DOWNLOAD_PATH)"
 for ((i=0; i<=$LAST_INDEX; ++i))
 do
+    echo "Downloading: "${MOD_DOWNLOAD_LINKS[$i]}
     #wget ${MOD_DOWNLOAD_LINKS[$i]} -O "$(eval echo ${DOWNLOAD_PATH}${i}.${FILE_EXTENSION})"
     curl --connect-timeout 20 --max-time 20 --retry-delay 30 --retry 10 -o "$(eval echo ${DOWNLOAD_PATH}${i}.${FILE_EXTENSION})" -L ${MOD_DOWNLOAD_LINKS[$i]}
 done
@@ -74,7 +75,8 @@ done
 mkdir -p "$(eval echo $TEMP_EXTRACTION_PATH)"
 for ((i=0; i<=$LAST_INDEX; ++i))
 do
-    7z -y x "$(eval echo ${DOWNLOAD_PATH}${i}.${FILE_EXTENSION})" -o"$(eval echo $TEMP_EXTRACTION_PATH/${MOD_NAMES[$i]}/)"
+    echo "Extracting "${DOWNLOAD_PATH}${i}"."${FILE_EXTENSION}" to "$TEMP_EXTRACTION_PATH${MOD_NAMES[$i]}
+    7z -y x "$(eval echo ${DOWNLOAD_PATH}${i}.${FILE_EXTENSION})" -o"$(eval echo $TEMP_EXTRACTION_PATH${MOD_NAMES[$i]}/)"
 done
 
 # Indicates where the normal mods start.
@@ -84,18 +86,19 @@ START_INDEX=0
 # Check if BepInEx is present.
 # If so, move bepinex to the mod install folder.
 # This has to be done separately, because the paths are different from the other mods.
-if [${MOD_PAGE_LINKS[0]} -eq "/package/denikson/BepInExPack_Valheim/"]; then
-    echo "BepInEx to be installed. Starting with it."
-    rsync -r "$(eval echo $TEMP_EXTRACTION_PATH${MOD_NAMES[0]}/${MOD_NAMES[0]}/)"* "$(eval echo $INSTAL_PATH)"
+if [ "${MOD_PAGE_LINKS[0]}"="/package/denikson/BepInExPack_Valheim/" ]; then
+    echo "Moving BepInEx from "$TEMP_EXTRACTION_PATH${MOD_NAMES[0]}"/"${MOD_NAMES[0]}"/ to "$INSTAL_PATH
+    rsync -r --mkpath "$(eval echo $TEMP_EXTRACTION_PATH${MOD_NAMES[0]}/${MOD_NAMES[0]}/)"* "$(eval echo $INSTAL_PATH)"
     START_INDEX=1
 fi
 
 # Move the rest of the mods to the bepinex folder.
 for ((i=$START_INDEX; i<=$LAST_INDEX; ++i))
 do
-    cd $TEMP_EXTRACTION_PATH/${MOD_NAMES[$i]}/
+    echo "Moving files from "$TEMP_EXTRACTION_PATH${MOD_NAMES[$i]}"/ to "${INSTAL_PATH}"BepInEx/"
+    cd $TEMP_EXTRACTION_PATH${MOD_NAMES[$i]}/
     FILES_TO_MOVE=$(ls $TEMP_EXTRACTION_PATH/${MOD_NAMES[$i]}/ -I icon.png -I manifest.json -I README.md)
-    rsync -r $FILES_TO_MOVE "$(eval echo ${INSTAL_PATH}BepInEx/)"
+    rsync -r --mkpath $FILES_TO_MOVE "$(eval echo ${INSTAL_PATH}BepInEx/)"
 done
 
 # Delete the temporary folder.
